@@ -1,8 +1,6 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,22 +8,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
-
-import algorithm.GeoRecommendation;
-import entity.Item;
-
 /**
- * Servlet implementation class RecommendItem
+ * Servlet implementation class Logout
  */
-@WebServlet("/recommendation")
-public class RecommendItem extends HttpServlet {
+@WebServlet("/logout")
+public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public RecommendItem() {
+	public Logout() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -35,33 +28,13 @@ public class RecommendItem extends HttpServlet {
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {		
+			throws ServletException, IOException {
+		// invalidate the session if exists
 		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
+		if (session != null) {
+			session.invalidate();
 		}
-		
-		String userId = session.getAttribute("user_id").toString();
-		
-		double lat = Double.parseDouble(request.getParameter("lat"));
-		double lon = Double.parseDouble(request.getParameter("lon"));
-		
-		GeoRecommendation recommendation = new GeoRecommendation();
-
-		List<Item> items = recommendation.recommendItems(userId, lat, lon);
-		
-		JSONArray result = new JSONArray();
-		try {
-			for (Item item : items) {
-				result.put(item.toJSONObject());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		RpcHelper.writeJsonArray(response, result);
-
+		response.sendRedirect("index.html");
 	}
 
 	/**

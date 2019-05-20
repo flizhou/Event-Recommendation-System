@@ -1,17 +1,20 @@
 package db;
 
+import db.mongodb.MongoDBConnection;
 import db.mysql.MySQLConnection;
 
 public class DBConnectionFactory {
-	private static final String DEFAULT_DB = "mysql";
 	
+	// This should change based on the pipeline
+	private static final String DEFAULT_DB = "mongodb";
+	
+	// Create a DBConnection based on given db type
 	public static DBConnection getConnection(String db) {
 		switch(db) {
 			case "mysql":
 				return new MySQLConnection();
 			case "mongodb":
-				//return new MongoDBConnection();
-				return null;
+				return new MongoDBConnection();
 			default:
 				throw new IllegalArgumentException("Invalid db:" + db);
 		}

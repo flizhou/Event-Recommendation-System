@@ -59,7 +59,7 @@ public class Item {
 
 	}
 	
-	public static class ItemBuilder {	// must be static, otherwise an instance is need to use ItemBuilder
+	public static class ItemBuilder {	// must be static, otherwise an instance is required to use ItemBuilder
 		private String itemId;
 		private String name;
 		private double rating;

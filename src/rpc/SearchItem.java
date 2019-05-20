@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,7 +37,13 @@ public class SearchItem extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String userId = request.getParameter("user_id");
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
+		String userId = session.getAttribute("user_id").toString();
+		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 		String term = request.getParameter("term");
@@ -49,7 +56,10 @@ public class SearchItem extends HttpServlet {
 		JSONArray array = new JSONArray();
 		try {
 			for(Item item: items) {
+				// Add a thin version of item object
 				JSONObject obj = item.toJSONObject();
+				// Check if this is a favorite one
+				// This field is required by fronted to correctly display favorite items
 				obj.put("favorite", favorite.contains(item.getItemId()));
 				array.put(obj);
 			}
